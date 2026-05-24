@@ -8,7 +8,16 @@ from plotly.subplots import make_subplots
 st.set_page_config(page_title="Earned Value Analysis", page_icon="📊", layout="centered")
 
 
-def build_evm_chart(pv: float, ac: float, ev: float, eac: float, etc: float, cpi: float, spi: float, tcpi: float) -> go.Figure:
+def build_evm_chart(
+    pv: float,
+    ac: float,
+    ev: float,
+    eac: float,
+    etc: float,
+    cpi: float,
+    spi: float,
+    tcpi: float,
+) -> go.Figure:
     fig = make_subplots(specs=[[{"secondary_y": True}]])
 
     money_labels = ["PV", "AC", "EV", "EAC", "ETC"]
@@ -56,7 +65,9 @@ def build_evm_chart(pv: float, ac: float, ev: float, eac: float, etc: float, cpi
 
 
 st.title("📊 Earned Value Analysis Tool")
-st.markdown("Enter your project values below to get an instant health check, advanced forecast metrics, and a chart.")
+st.markdown(
+    "Enter your project values below to get an instant health check, advanced forecast metrics, and a chart."
+)
 
 st.divider()
 
@@ -79,17 +90,9 @@ if st.button("🔍 Analyse Project", use_container_width=True):
         cpi = ev / ac
         spi = ev / pv
 
-        if cpi != 0:
-            eac = bac / cpi
-        else:
-            eac = 0.0
-
+        eac = bac / cpi if cpi != 0 else 0.0
         etc = eac - ac
-
-        if bac - ac != 0:
-            tcpi = (bac - ev) / (bac - ac)
-        else:
-            tcpi = 0.0
+        tcpi = (bac - ev) / (bac - ac) if bac - ac != 0 else 0.0
 
         st.subheader("📈 Core Results")
         m1, m2, m3, m4 = st.columns(4)
@@ -138,9 +141,13 @@ if st.button("🔍 Analyse Project", use_container_width=True):
         if tcpi == 0:
             st.info("ℹ️ TCPI could not be calculated because BAC equals AC.")
         elif tcpi <= 1:
-            st.success(f"✅ TCPI {tcpi:.2f}: Remaining performance target looks achievable")
+            st.success(
+                f"✅ TCPI {tcpi:.2f}: Remaining performance target looks achievable"
+            )
         else:
-            st.warning(f"⚠️ TCPI {tcpi:.2f}: Remaining work needs higher-than-current efficiency")
+            st.warning(
+                f"⚠️ TCPI {tcpi:.2f}: Remaining work needs higher-than-current efficiency"
+            )
 
         st.divider()
         st.subheader("📉 EVM Graph")
@@ -150,7 +157,19 @@ if st.button("🔍 Analyse Project", use_container_width=True):
         st.subheader("📋 Summary Table")
         st.dataframe(
             {
-                "Metric": ["BAC", "PV", "AC", "EV", "CV", "SV", "CPI", "SPI", "EAC", "ETC", "TCPI"],
+                "Metric": [
+                    "BAC",
+                    "PV",
+                    "AC",
+                    "EV",
+                    "CV",
+                    "SV",
+                    "CPI",
+                    "SPI",
+                    "EAC",
+                    "ETC",
+                    "TCPI",
+                ],
                 "Value": [
                     f"{bac:,.2f}",
                     f"{pv:,.2f}",
